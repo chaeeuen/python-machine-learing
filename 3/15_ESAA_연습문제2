@@ -1,0 +1,455 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 2",
+      "language": "python",
+      "name": "python2"
+    },
+    "language_info": {
+      "codemirror_mode": {
+        "name": "ipython",
+        "version": 2
+      },
+      "file_extension": ".py",
+      "mimetype": "text/x-python",
+      "name": "python",
+      "nbconvert_exporter": "python",
+      "pygments_lexer": "ipython2",
+      "version": "2.7.11"
+    },
+    "colab": {
+      "provenance": [],
+      "include_colab_link": true
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/chaeeuen/python-machine-learing/blob/main/3/15_ESAA_%EC%97%B0%EC%8A%B5%EB%AC%B8%EC%A0%9C2\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "RYQSB73_akvl"
+      },
+      "source": [
+        "# Occupation"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "Ez-pV6Jaakvs"
+      },
+      "source": [
+        "### Introduction:\n",
+        "\n",
+        "Special thanks to: https://github.com/justmarkham for sharing the dataset and materials.\n",
+        "\n",
+        "### Step 1. Import the necessary libraries"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "s-DFQmeNakvu"
+      },
+      "source": [
+        "import pandas as pd"
+      ],
+      "execution_count": 1,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "ShhIzySnakvw"
+      },
+      "source": [
+        "### Step 2. Import the dataset from this [address](https://raw.githubusercontent.com/justmarkham/DAT8/master/data/u.user)."
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "03hsscjRakvx"
+      },
+      "source": [
+        "### Step 3. Assign it to a variable called users."
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 3,
+      "metadata": {
+        "id": "CxqjYNKUgWVr"
+      },
+      "outputs": [],
+      "source": [
+        "users = pd.read_csv(\"https://raw.githubusercontent.com/justmarkham/DAT8/master/data/u.user\", sep=\"|\", index_col=\"user_id\")"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "p4rTx11Sakvz"
+      },
+      "source": [
+        "### Step 4. Discover what is the mean age per occupation"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "PNUZKNafakv1",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "990f34d8-99b8-4ae8-980a-c669c4637c68"
+      },
+      "source": [
+        "users.groupby('occupation').age.mean()"
+      ],
+      "execution_count": 4,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "occupation\n",
+              "administrator    38.746835\n",
+              "artist           31.392857\n",
+              "doctor           43.571429\n",
+              "educator         42.010526\n",
+              "engineer         36.388060\n",
+              "entertainment    29.222222\n",
+              "executive        38.718750\n",
+              "healthcare       41.562500\n",
+              "homemaker        32.571429\n",
+              "lawyer           36.750000\n",
+              "librarian        40.000000\n",
+              "marketing        37.615385\n",
+              "none             26.555556\n",
+              "other            34.523810\n",
+              "programmer       33.121212\n",
+              "retired          63.071429\n",
+              "salesman         35.666667\n",
+              "scientist        35.548387\n",
+              "student          22.081633\n",
+              "technician       33.148148\n",
+              "writer           36.311111\n",
+              "Name: age, dtype: float64"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 4
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "b9Va6b3Qakv3"
+      },
+      "source": [
+        "### Step 5. Discover the Male ratio per occupation and sort it from the most to the least"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "xb3LjNPRakv5",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "201f409d-cdb3-4ed2-a3d5-8919ff2d7f57"
+      },
+      "source": [
+        "users['is_male'] = users.gender.apply(lambda x: True if x == 'M' else False)\n",
+        "users.is_male\n",
+        "\n",
+        "(users.groupby('occupation').is_male.sum() / users.groupby('occupation').gender.count()).sort_values(ascending = False)"
+      ],
+      "execution_count": 11,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "occupation\n",
+              "doctor           1.000000\n",
+              "engineer         0.970149\n",
+              "technician       0.962963\n",
+              "retired          0.928571\n",
+              "programmer       0.909091\n",
+              "executive        0.906250\n",
+              "scientist        0.903226\n",
+              "entertainment    0.888889\n",
+              "lawyer           0.833333\n",
+              "salesman         0.750000\n",
+              "educator         0.726316\n",
+              "student          0.693878\n",
+              "other            0.657143\n",
+              "marketing        0.615385\n",
+              "writer           0.577778\n",
+              "none             0.555556\n",
+              "administrator    0.544304\n",
+              "artist           0.535714\n",
+              "librarian        0.431373\n",
+              "healthcare       0.312500\n",
+              "homemaker        0.142857\n",
+              "dtype: float64"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 11
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "V8iyNzOiakv6"
+      },
+      "source": [
+        "### Step 6. For each occupation, calculate the minimum and maximum ages"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "_XxSd_XWakv7",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "f872b093-21ea-4fc3-ab90-02becb419fa5"
+      },
+      "source": [
+        "print(users.groupby('occupation').age.min())\n",
+        "print(users.groupby('occupation').age.max())"
+      ],
+      "execution_count": 7,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "occupation\n",
+            "administrator    21\n",
+            "artist           19\n",
+            "doctor           28\n",
+            "educator         23\n",
+            "engineer         22\n",
+            "entertainment    15\n",
+            "executive        22\n",
+            "healthcare       22\n",
+            "homemaker        20\n",
+            "lawyer           21\n",
+            "librarian        23\n",
+            "marketing        24\n",
+            "none             11\n",
+            "other            13\n",
+            "programmer       20\n",
+            "retired          51\n",
+            "salesman         18\n",
+            "scientist        23\n",
+            "student           7\n",
+            "technician       21\n",
+            "writer           18\n",
+            "Name: age, dtype: int64\n",
+            "occupation\n",
+            "administrator    70\n",
+            "artist           48\n",
+            "doctor           64\n",
+            "educator         63\n",
+            "engineer         70\n",
+            "entertainment    50\n",
+            "executive        69\n",
+            "healthcare       62\n",
+            "homemaker        50\n",
+            "lawyer           53\n",
+            "librarian        69\n",
+            "marketing        55\n",
+            "none             55\n",
+            "other            64\n",
+            "programmer       63\n",
+            "retired          73\n",
+            "salesman         66\n",
+            "scientist        55\n",
+            "student          42\n",
+            "technician       55\n",
+            "writer           60\n",
+            "Name: age, dtype: int64\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "IITVNpN_akv8"
+      },
+      "source": [
+        "### Step 7. For each combination of occupation and gender, calculate the mean age"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "users.groupby(['occupation', 'gender']).age.mean()"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "o0bGxWqVhbS_",
+        "outputId": "088cd84f-064f-400f-c226-11b08a93c072"
+      },
+      "execution_count": 8,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "occupation     gender\n",
+              "administrator  F         40.638889\n",
+              "               M         37.162791\n",
+              "artist         F         30.307692\n",
+              "               M         32.333333\n",
+              "doctor         M         43.571429\n",
+              "educator       F         39.115385\n",
+              "               M         43.101449\n",
+              "engineer       F         29.500000\n",
+              "               M         36.600000\n",
+              "entertainment  F         31.000000\n",
+              "               M         29.000000\n",
+              "executive      F         44.000000\n",
+              "               M         38.172414\n",
+              "healthcare     F         39.818182\n",
+              "               M         45.400000\n",
+              "homemaker      F         34.166667\n",
+              "               M         23.000000\n",
+              "lawyer         F         39.500000\n",
+              "               M         36.200000\n",
+              "librarian      F         40.000000\n",
+              "               M         40.000000\n",
+              "marketing      F         37.200000\n",
+              "               M         37.875000\n",
+              "none           F         36.500000\n",
+              "               M         18.600000\n",
+              "other          F         35.472222\n",
+              "               M         34.028986\n",
+              "programmer     F         32.166667\n",
+              "               M         33.216667\n",
+              "retired        F         70.000000\n",
+              "               M         62.538462\n",
+              "salesman       F         27.000000\n",
+              "               M         38.555556\n",
+              "scientist      F         28.333333\n",
+              "               M         36.321429\n",
+              "student        F         20.750000\n",
+              "               M         22.669118\n",
+              "technician     F         38.000000\n",
+              "               M         32.961538\n",
+              "writer         F         37.631579\n",
+              "               M         35.346154\n",
+              "Name: age, dtype: float64"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 8
+        }
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "6cfimN8Eakv-"
+      },
+      "source": [
+        "### Step 8.  For each occupation present the percentage of women and men"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "metadata": {
+        "id": "jCOC0CHGakv_",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "outputId": "15f7ee8c-7a23-4680-f69a-fbcb23e70087"
+      },
+      "source": [
+        "gender_ocup = users.groupby(['occupation', 'gender']).agg({'gender': 'count'})\n",
+        "\n",
+        "occup_count = users.groupby(['occupation']).count()\n",
+        "\n",
+        "occup_gender = gender_ocup.div(occup_count, level = \"occupation\")\n",
+        "occup_gender.loc[:, 'gender']"
+      ],
+      "execution_count": 10,
+      "outputs": [
+        {
+          "output_type": "execute_result",
+          "data": {
+            "text/plain": [
+              "occupation     gender\n",
+              "administrator  F         0.455696\n",
+              "               M         0.544304\n",
+              "artist         F         0.464286\n",
+              "               M         0.535714\n",
+              "doctor         M         1.000000\n",
+              "educator       F         0.273684\n",
+              "               M         0.726316\n",
+              "engineer       F         0.029851\n",
+              "               M         0.970149\n",
+              "entertainment  F         0.111111\n",
+              "               M         0.888889\n",
+              "executive      F         0.093750\n",
+              "               M         0.906250\n",
+              "healthcare     F         0.687500\n",
+              "               M         0.312500\n",
+              "homemaker      F         0.857143\n",
+              "               M         0.142857\n",
+              "lawyer         F         0.166667\n",
+              "               M         0.833333\n",
+              "librarian      F         0.568627\n",
+              "               M         0.431373\n",
+              "marketing      F         0.384615\n",
+              "               M         0.615385\n",
+              "none           F         0.444444\n",
+              "               M         0.555556\n",
+              "other          F         0.342857\n",
+              "               M         0.657143\n",
+              "programmer     F         0.090909\n",
+              "               M         0.909091\n",
+              "retired        F         0.071429\n",
+              "               M         0.928571\n",
+              "salesman       F         0.250000\n",
+              "               M         0.750000\n",
+              "scientist      F         0.096774\n",
+              "               M         0.903226\n",
+              "student        F         0.306122\n",
+              "               M         0.693878\n",
+              "technician     F         0.037037\n",
+              "               M         0.962963\n",
+              "writer         F         0.422222\n",
+              "               M         0.577778\n",
+              "Name: gender, dtype: float64"
+            ]
+          },
+          "metadata": {},
+          "execution_count": 10
+        }
+      ]
+    }
+  ]
+}
